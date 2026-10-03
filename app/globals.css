@@ -1,26 +1,59 @@
 @import "tailwindcss";
+@import "katex/dist/katex.min.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Typography mappings linked to next/font CSS variables */
+  --font-sans:
+    var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  --font-mono:
+    var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, monospace;
+
+  /* Don't Board Me x Learnify Token Palette */
+  --color-canvas: #fbfbf9; /* Warm off-white primary canvas */
+  --color-surface: #ffffff; /* Pure white card backgrounds */
+  --color-ink: #191a1d; /* Deep editorial black/graphite */
+  --color-ink-muted: #6b7280; /* Muted gray for subtitles & secondary text */
+  --color-ink-faint: #e5e7eb; /* Border dividers */
+
+  /* Distinct Section Accents */
+  --color-coral: #fa5d38; /* Primary CTA / Don't Board Me Tomato[cite: 1] */
+  --color-coral-hover: #e04a26;
+  --color-butter: #fee488; /* Learnify Yellow Focus Card[cite: 1] */
+  --color-lilac: #d9c6fe; /* Learnify Lavender Card[cite: 1] */
+  --color-ice: #cfebfd; /* Learnify Baby Blue Card[cite: 1] */
+  --color-charcoal: #1c1e21; /* Learnify Sidebar/Chassis Charcoal[cite: 1] */
+
+  /* Hard Tactile Shadows */
+  --shadow-chunky: 0 8px 0px 0px #191a1d;
+  --shadow-chunky-sm: 0 4px 0px 0px #191a1d;
+  --shadow-chunky-hover: 0 2px 0px 0px #191a1d;
+
+  /* Radii */
+  --radius-chunky: 2rem;
+  --radius-card: 1.5rem;
+  --radius-pill: 9999px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Global Reset & Base Rules */
+html {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Accessible focus ring style */
+:focus-visible {
+  outline: 3px solid var(--color-coral);
+  outline-offset: 2px;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom selection styling matching the tomato accent */
+::selection {
+  background-color: var(--color-coral);
+  color: #ffffff;
 }
