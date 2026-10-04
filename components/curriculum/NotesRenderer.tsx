@@ -7,6 +7,9 @@ import rehypePrettyCode from "rehype-pretty-code";
 import { PillBadge } from "@/components/ui/PillBadge";
 import { FunctionPlot } from "@/components/curriculum/FunctionPlot";
 import { CloudinaryImg } from "@/components/curriculum/CloudinaryImg";
+import { YouTube } from "@/components/curriculum/YouTube";
+import { NoteImage } from "@/components/curriculum/NoteImage";
+import type { NoteComponentName } from "@/lib/note-components";
 
 // Inside notes the badge should read like an inline highlight, not a hero pill.
 function NotePill(props: ComponentProps<typeof PillBadge>) {
@@ -17,11 +20,17 @@ function NotePill(props: ComponentProps<typeof PillBadge>) {
 //   <PillBadge variant="butter">Exam Definition</PillBadge>
 //   <FunctionPlot fn="x^2 - 4" />
 //   <CloudinaryImg src="https://res.cloudinary.com/..." alt="..." caption="..." />
+//   <YouTube url="https://youtu.be/..." title="Extra explanation" />
+// Plain markdown images ![caption](url) are routed to NoteImage via `img`.
+// `satisfies` makes TypeScript fail if lib/note-components.ts lists a tag that
+// isn't provided here (the push script validates notes against that list).
 const components = {
   PillBadge: NotePill,
   FunctionPlot,
   CloudinaryImg,
-};
+  YouTube,
+  img: NoteImage,
+} satisfies Record<NoteComponentName, unknown> & { img: unknown };
 
 interface NotesRendererProps {
   content: string;

@@ -3,8 +3,8 @@ import { FaYoutube } from "react-icons/fa6";
 export interface VideoCardProps {
   title: string;
   youtubeId: string;
-  author: string;
-  duration: string;
+  author?: string | null;
+  duration?: string | null;
 }
 
 export function VideoCard({
@@ -21,24 +21,29 @@ export function VideoCard({
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
+          loading="lazy"
           className="h-full w-full border-0"
         />
       </div>
 
       <div className="p-4 sm:p-5 flex items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <FaYoutube className="size-4 text-coral" />
-            <span className="text-xs font-bold text-ink-muted">
-              Lecturer / Channel: {author}
-            </span>
-          </div>
+          {author && (
+            <div className="flex items-center gap-2">
+              <FaYoutube className="size-4 text-coral" />
+              <span className="text-xs font-bold text-ink-muted">
+                Lecturer / Channel: {author}
+              </span>
+            </div>
+          )}
           <h4 className="text-sm sm:text-base font-black text-ink">{title}</h4>
         </div>
 
-        <span className="shrink-0 rounded-full border-2 border-ink bg-ice px-3 py-1 font-mono text-xs font-black text-ink">
-          {duration}
-        </span>
+        {duration && (
+          <span className="shrink-0 rounded-full border-2 border-ink bg-ice px-3 py-1 font-mono text-xs font-black text-ink">
+            {duration}
+          </span>
+        )}
       </div>
     </div>
   );

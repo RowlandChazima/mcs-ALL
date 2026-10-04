@@ -23,10 +23,10 @@ export interface FunctionPlotProps {
   xDomain?: MaybeJson<[number, number]>;
   /** Leave out to keep a square-ish aspect ratio automatically. */
   yDomain?: MaybeJson<[number, number]>;
-  height?: number;
+  height?: number | string;
   /** Enable mouse-wheel zoom and drag-to-pan. Off by default so the plot
    *  never hijacks page scrolling (especially on phones). */
-  interactive?: boolean;
+  interactive?: boolean | string;
 }
 
 function parseJsonProp<T>(
@@ -51,9 +51,13 @@ export function FunctionPlot({
   title,
   xDomain: xDomainProp,
   yDomain: yDomainProp,
-  height = 320,
-  interactive = false,
+  height: heightProp = 320,
+  interactive: interactiveProp = false,
 }: FunctionPlotProps) {
+  // Inside notes every prop arrives as a string: height="400", interactive="true".
+  const parsedHeight = Number(heightProp);
+  const height = Number.isFinite(parsedHeight) && parsedHeight > 0 ? parsedHeight : 320;
+  const interactive = interactiveProp === true || interactiveProp === "true";
   const containerRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);

@@ -69,8 +69,8 @@ export default async function SubtopicPage({ params }: SubtopicPageProps) {
 
           {currentTopic.youtube_id && (
             <VideoCard
-              author={currentTopic.youtube_author ?? "Unknown channel"}
-              duration={currentTopic.youtube_duration ?? ""}
+              author={currentTopic.youtube_author}
+              duration={currentTopic.youtube_duration}
               title={currentTopic.youtube_title ?? currentTopic.title}
               youtubeId={currentTopic.youtube_id}
             />

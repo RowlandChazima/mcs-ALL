@@ -29,7 +29,7 @@ async function runSeed() {
   if (yearErr) throw yearErr;
 
   // 2. Insert Units
-  const { data: units, error: unitErr } = await supabase
+  const { error: unitErr } = await supabase
     .from("units")
     .upsert(
       [
@@ -61,105 +61,13 @@ async function runSeed() {
         },
       ],
       { onConflict: "slug" },
-    )
-    .select();
+    );
 
   if (unitErr) throw unitErr;
 
-  const calcUnit = units.find((u) => u.slug === "calculus-1")!;
-
-  // 3. Insert Subtopics for Calculus I with KaTeX formulas
-  const { error: subtopicErr } = await supabase.from("subtopics").upsert(
-    [
-      {
-        unit_id: calcUnit.id,
-        slug: "formal-definition-of-limits",
-        title: "Limits: The Epsilon-Delta Formulation",
-        summary:
-          "The rigorous definition of a limit, plus the sum and quotient rules.",
-        reading_minutes: 8,
-        order_index: 1,
-        youtube_id: "kfF40MiS7zA",
-        youtube_title: "Understanding Epsilon-Delta Formulations",
-        youtube_author: "3Blue1Brown",
-        youtube_duration: "18:24",
-        content_markdown: `### The Rigorous Definition of a Limit
-
-Let $f(x)$ be defined on an open interval around $x_0$, except possibly at $x_0$ itself. We write:
-
-$$\\lim_{x \\to x_0} f(x) = L$$
-
-if for every real $\\varepsilon > 0$, there exists a corresponding real $\\delta > 0$ such that:
-
-$$0 < |x - x_0| < \\delta \\implies |f(x) - L| < \\varepsilon$$
-
-<PillBadge variant="butter">Exam Definition Required</PillBadge>
-
-#### Key Properties of Limits
-When analyzing standard algebraic expressions, the following limit identities hold true provided $\\lim f(x)$ and $\\lim g(x)$ exist:
-
-1. **Sum Rule**: $\\lim [f(x) + g(x)] = \\lim f(x) + \\lim g(x)$
-2. **Quotient Rule**: $\\lim \\left[\\frac{f(x)}{g(x)}\\right] = \\frac{\\lim f(x)}{\\lim g(x)}$, where $\\lim g(x) \\neq 0$.
-
-<FunctionPlot fn="x^2 - 4" xDomain="[-4, 4]" yDomain="[-5, 8]" points="[[-2, 0], [2, 0], [0, -4]]" title="Parabolic curve" />
-`,
-      },
-      {
-        unit_id: calcUnit.id,
-        slug: "differentiation-from-first-principles",
-        title: "Differentiation from First Principles",
-        summary:
-          "Deriving the derivative from the limit definition, with a worked example.",
-        reading_minutes: 10,
-        order_index: 2,
-        youtube_id: "rAof9Ld5sOg",
-        youtube_title: "Derivatives by First Principles",
-        youtube_author: "Khan Academy",
-        youtube_duration: "14:10",
-        content_markdown: `### The Derivative as a Limit of Secants
-
-The derivative of $f$ at $x$, denoted $f'(x)$, is established via the difference quotient limit:
-
-$$f'(x) = \\lim_{h \\to 0} \\frac{f(x + h) - f(x)}{h}$$
-
-provided this limit exists.
-
-\`\`\`c
-// Numerical Secant Approximation Example in C
-#include <stdio.h>
-#include <math.h>
-
-double derivative(double (*f)(double), double x, double h) {
-    return (f(x + h) - f(x)) / h;
-}
-\`\`\`
-`,
-      },
-    ],
-    { onConflict: "unit_id, slug" },
-  );
-
-  if (subtopicErr) throw subtopicErr;
-
-  // 4. Insert Downloadable Resources
-  await supabase.from("resources").upsert([
-    {
-      unit_id: calcUnit.id,
-      title: "Calculus I CAT 1 Solutions (2024)",
-      category: "past_paper",
-      file_url:
-        "https://your-bucket-url.supabase.co/storage/v1/object/public/course-materials/calc1-cat1-2024.pdf",
-      file_size: "1.4 MB",
-    },
-    {
-      unit_id: calcUnit.id,
-      title: "Tutorial Sheet 1: Limits & Continuity",
-      category: "tutorial_sheet",
-      file_url:
-        "https://your-bucket-url.supabase.co/storage/v1/object/public/course-materials/calc1-sheet1.pdf",
-      file_size: "620 KB",
-    },
-  ], { onConflict: "unit_id,title" });
+  // Notes (subtopics) and downloads are NOT seeded here. They live in notes/
+  // and are pushed with `pnpm notes:push`, so re-seeding can never overwrite
+  // your work or add placeholder files.
 
   console.log("Database seeded successfully!");
 }
