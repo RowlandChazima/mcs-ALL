@@ -6,9 +6,9 @@ export interface SubtopicRowProps {
   subtopicSlug: string;
   orderNumber: number;
   title: string;
-  summary: string;
+  summary?: string | null;
   hasVideo: boolean;
-  videoDuration?: string;
+  videoDuration?: string | null;
   readingTimeMinutes?: number;
 }
 
@@ -20,7 +20,7 @@ const SubtopicRow = ({
   summary,
   hasVideo,
   videoDuration,
-  readingTimeMinutes = 15,
+  readingTimeMinutes,
 }: SubtopicRowProps) => {
   const formattedNumber =
     orderNumber < 10 ? `0${orderNumber}` : `${orderNumber}`;
@@ -40,9 +40,11 @@ const SubtopicRow = ({
           <h4 className="text-base sm:text-lg font-black text-ink tracking-tight transition-colors group-hover:text-coral">
             {title}
           </h4>
-          <p className="text-xs sm:text-sm text-ink-muted font-medium line-clamp-1 max-w-xl">
-            {summary}
-          </p>
+          {summary && (
+            <p className="text-xs sm:text-sm text-ink-muted font-medium line-clamp-1 max-w-xl">
+              {summary}
+            </p>
+          )}
         </div>
       </div>
 
@@ -56,9 +58,11 @@ const SubtopicRow = ({
             </span>
           )}
 
-          <span className="rounded-full border-2 border-ink bg-canvas px-3 py-0.5 text-xs font-bold text-ink-muted">
-            {readingTimeMinutes} min read
-          </span>
+          {readingTimeMinutes ? (
+            <span className="rounded-full border-2 border-ink bg-canvas px-3 py-0.5 text-xs font-bold text-ink-muted">
+              {readingTimeMinutes} min read
+            </span>
+          ) : null}
         </div>
 
         <div className="flex size-9 items-center justify-center rounded-full border-2 border-ink bg-ink text-white transition-all group-hover:bg-coral group-hover:translate-x-1">

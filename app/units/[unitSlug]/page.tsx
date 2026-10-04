@@ -1,94 +1,18 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { FaArrowLeft, FaDownload, FaGraduationCap } from "react-icons/fa6";
+import { FaArrowLeft, FaGraduationCap } from "react-icons/fa6";
 import SubtopicRow from "@/components/curriculum/SubtopicRow";
 import ResourceCard from "@/components/curriculum/ResourceCard";
+import { getUnitDetails } from "@/lib/db/queries";
 
-// Mock Unit Data (Calculus 1 Example)
-const UNIT_DETAILS = {
-  code: "SMA 2100",
-  slug: "calculus-1",
-  title: "Calculus I",
-  yearSlug: "year-1",
-  colorVariant: "butter" as const,
-  semester: 1,
-  description:
-    "An introduction to single-variable differential calculus. Core focal areas include limits, formal epsilon-delta continuity, differentiation from first principles, standard derivatives, and extreme value curve optimization.",
-  subtopics: [
-    {
-      orderNumber: 1,
-      slug: "functions-and-domain",
-      title: "Functions, Domain, and Codomain",
-      summary:
-        "Properties of real-valued functions, composite functions, and determination of natural domains.",
-      hasVideo: true,
-      videoDuration: "24 min",
-      readingTimeMinutes: 12,
-    },
-    {
-      orderNumber: 2,
-      slug: "limits-and-intuitive-approach",
-      title: "Limits: Intuitive & Formal Definition",
-      summary:
-        "One-sided limits, algebraic techniques for indeterminate forms, and basic squeeze theorem.",
-      hasVideo: true,
-      videoDuration: "35 min",
-      readingTimeMinutes: 18,
-    },
-    {
-      orderNumber: 3,
-      slug: "continuity-and-intermediate-value",
-      title: "Continuity & Intermediate Value Theorem",
-      summary:
-        "Removable and jump discontinuities, continuity on closed intervals, and the IVT theorem.",
-      hasVideo: true,
-      videoDuration: "18 min",
-      readingTimeMinutes: 15,
-    },
-    {
-      orderNumber: 4,
-      slug: "differentiation-from-first-principles",
-      title: "Differentiation from First Principles",
-      summary:
-        "Derivation of the derivative definition, geometric slope interpretation, and proof for polynomials.",
-      hasVideo: true,
-      videoDuration: "42 min",
-      readingTimeMinutes: 20,
-    },
-    {
-      orderNumber: 5,
-      slug: "product-quotient-and-chain-rules",
-      title: "Chain Rule & Advanced Differentiation",
-      summary:
-        "Systematic application of the chain, quotient, and product rules with trigonometric functions.",
-      hasVideo: false,
-      readingTimeMinutes: 25,
-    },
-  ],
-  resources: [
-    {
-      id: "res-1",
-      title: "CAT 1 Past Examination (2024 with Solutions)",
-      category: "past_paper" as const,
-      fileUrl: "#",
-      fileSize: "1.2 MB",
-    },
-    {
-      id: "res-2",
-      title: "Limits & First Principles - Tutorial Sheet 1",
-      category: "tutorial_sheet" as const,
-      fileUrl: "#",
-      fileSize: "480 KB",
-    },
-    {
-      id: "res-3",
-      title: "Lecturer Slide Pack: Derivatives & Curve Sketching",
-      category: "lecture_slide" as const,
-      fileUrl: "#",
-      fileSize: "4.8 MB",
-    },
-  ],
-};
+// Static class names (Tailwind can't see classes built from strings at runtime).
+const HEADER_THEMES = {
+  butter: { bg: "bg-butter", text: "text-ink" },
+  lilac: { bg: "bg-lilac", text: "text-ink" },
+  ice: { bg: "bg-ice", text: "text-ink" },
+  charcoal: { bg: "bg-charcoal", text: "text-white" },
+} as const;
 
 interface UnitPageProps {
   params: Promise<{
@@ -96,58 +20,80 @@ interface UnitPageProps {
   }>;
 }
 
+// Uses the same cached query as the page below, so it costs no extra request.
+export async function generateMetadata({
+  params,
+}: UnitPageProps): Promise<Metadata> {
+  const { unitSlug } = await params;
+  const data = await getUnitDetails(unitSlug);
+  if (!data) return { title: "Unit not found" };
+  return {
+    title: `${data.unit.code} ${data.unit.title}`,
+    description: data.unit.description,
+  };
+}
+
 export default async function UnitPage({ params }: UnitPageProps) {
   const { unitSlug } = await params;
 
-  // Static route safeguard (maps to Supabase query in production)
-  if (unitSlug !== UNIT_DETAILS.slug) {
-    notFound();
-  }
+  const data = await getUnitDetails(unitSlug);
+  if (!data) notFound();
+
+  const { unit, subtopics, resources } = data;
+  const theme = HEADER_THEMES[unit.color_variant] ?? HEADER_THEMES.butter;
 
   return (
     <div className="space-y-12 py-6">
       {/* Top Breadcrumb */}
       <div className="flex items-center gap-3">
         <Link
-          href={`/years/${UNIT_DETAILS.yearSlug}`}
+          href={`/years/${unit.academic_years.slug}`}
           className="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-surface px-4 py-2 text-xs font-bold text-ink shadow-chunky-sm transition-transform hover:-translate-x-0.5"
         >
           <FaArrowLeft className="size-3" />
-          <span>Back to Year 1 Units</span>
+          <span>Back to {unit.academic_years.title}</span>
         </Link>
         <span className="text-xs font-bold uppercase tracking-wider text-ink-muted">
-          / {UNIT_DETAILS.code}
+          / {unit.code}
         </span>
       </div>
 
       {/* Unit Overview Header Block */}
-      <header className="relative overflow-hidden rounded-[2.5rem] border-2 border-ink bg-butter p-8 sm:p-12 shadow-chunky">
+      <header
+        className={`relative overflow-hidden rounded-[2.5rem] border-2 border-ink ${theme.bg} p-8 sm:p-12 shadow-chunky`}
+      >
         <div className="max-w-3xl space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full border-2 border-ink bg-surface px-3.5 py-1 font-mono text-xs font-black uppercase text-ink">
-              {UNIT_DETAILS.code}
+              {unit.code}
             </span>
             <span className="rounded-full border-2 border-ink bg-canvas px-3.5 py-1 text-xs font-black uppercase text-ink">
-              Semester {UNIT_DETAILS.semester}
+              Semester {unit.semester}
             </span>
             <span className="rounded-full border-2 border-ink bg-ink px-3.5 py-1 text-xs font-black text-white">
-              {UNIT_DETAILS.subtopics.length} Subtopics
+              {subtopics.length} {subtopics.length === 1 ? "Subtopic" : "Subtopics"}
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-ink">
-            {UNIT_DETAILS.title}
+          <h1
+            className={`text-3xl sm:text-5xl font-black tracking-tight ${theme.text}`}
+          >
+            {unit.title}
           </h1>
 
-          <p className="text-base sm:text-lg text-ink font-medium leading-relaxed opacity-90">
-            {UNIT_DETAILS.description}
-          </p>
+          {unit.description && (
+            <p
+              className={`text-base sm:text-lg font-medium leading-relaxed opacity-90 ${theme.text}`}
+            >
+              {unit.description}
+            </p>
+          )}
         </div>
       </header>
 
       {/* Two-Column Workspace Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        {/* Main Column (8 Cols): Syllabus Breakdown Table */}
+        {/* Main Column: Syllabus Breakdown */}
         <section className="lg:col-span-8 space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
@@ -158,30 +104,39 @@ export default async function UnitPage({ params }: UnitPageProps) {
                 Topics & Lecture Notes
               </h2>
             </div>
-            <span className="text-xs font-bold text-ink-muted">
-              Select a topic to start
-            </span>
+            {subtopics.length > 0 && (
+              <span className="text-xs font-bold text-ink-muted">
+                Select a topic to start
+              </span>
+            )}
           </div>
 
-          {/* Subtopics Checklist View */}
-          <div className="flex flex-col gap-3">
-            {UNIT_DETAILS.subtopics.map((subtopic) => (
-              <SubtopicRow
-                key={subtopic.slug}
-                unitSlug={UNIT_DETAILS.slug}
-                subtopicSlug={subtopic.slug}
-                orderNumber={subtopic.orderNumber}
-                title={subtopic.title}
-                summary={subtopic.summary}
-                hasVideo={subtopic.hasVideo}
-                videoDuration={subtopic.videoDuration}
-                readingTimeMinutes={subtopic.readingTimeMinutes}
-              />
-            ))}
-          </div>
+          {subtopics.length === 0 ? (
+            <div className="rounded-2xl border-2 border-dashed border-ink/40 bg-surface p-8 text-center">
+              <p className="text-sm font-bold text-ink-muted">
+                Notes for this unit are on the way.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {subtopics.map((subtopic, index) => (
+                <SubtopicRow
+                  key={subtopic.id}
+                  unitSlug={unit.slug}
+                  subtopicSlug={subtopic.slug}
+                  orderNumber={index + 1}
+                  title={subtopic.title}
+                  summary={subtopic.summary}
+                  hasVideo={Boolean(subtopic.youtube_id)}
+                  videoDuration={subtopic.youtube_duration}
+                  readingTimeMinutes={subtopic.reading_minutes ?? undefined}
+                />
+              ))}
+            </div>
+          )}
         </section>
 
-        {/* Sidebar Column (4 Cols): Downloads & Past Papers */}
+        {/* Sidebar Column: Downloads & Exam tip */}
         <aside className="lg:col-span-4 space-y-6">
           <div className="space-y-1">
             <span className="text-xs uppercase tracking-widest font-black text-coral">
@@ -192,31 +147,37 @@ export default async function UnitPage({ params }: UnitPageProps) {
             </h3>
           </div>
 
-          <div className="flex flex-col gap-3.5">
-            {UNIT_DETAILS.resources.map((res) => (
-              <ResourceCard
-                key={res.id}
-                title={res.title}
-                category={res.category}
-                fileUrl={res.fileUrl}
-                fileSize={res.fileSize}
-              />
-            ))}
-          </div>
-
-          {/* Study Tip Sticky Note */}
-          <div className="rounded-2xl border-2 border-ink bg-ice/60 p-5 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-black uppercase text-ink">
-              <FaGraduationCap className="size-4 text-coral" />
-              <span>Exam Prep Advice</span>
+          {resources.length === 0 ? (
+            <div className="rounded-2xl border-2 border-dashed border-ink/40 bg-surface p-5 text-center">
+              <p className="text-xs font-bold text-ink-muted">
+                No downloads yet. Past papers and slides will appear here.
+              </p>
             </div>
-            <p className="text-xs font-medium text-ink-muted leading-relaxed">
-              Lecturers heavily test{" "}
-              <strong>Differentiation from First Principles</strong> and{" "}
-              <strong>Composite Limits</strong> in CAT 1. Make sure to work
-              through Tutorial Sheet 1 before the CAT.
-            </p>
-          </div>
+          ) : (
+            <div className="flex flex-col gap-3.5">
+              {resources.map((res) => (
+                <ResourceCard
+                  key={res.id}
+                  title={res.title}
+                  category={res.category}
+                  fileUrl={res.file_url}
+                  fileSize={res.file_size ?? undefined}
+                />
+              ))}
+            </div>
+          )}
+
+          {unit.exam_tip && (
+            <div className="rounded-2xl border-2 border-ink bg-ice/60 p-5 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-black uppercase text-ink">
+                <FaGraduationCap className="size-4 text-coral" />
+                <span>Exam Prep Advice</span>
+              </div>
+              <p className="text-xs font-medium text-ink-muted leading-relaxed">
+                {unit.exam_tip}
+              </p>
+            </div>
+          )}
         </aside>
       </div>
     </div>

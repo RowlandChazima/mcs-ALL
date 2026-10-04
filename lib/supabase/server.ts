@@ -17,6 +17,10 @@ export function createServerClient() {
 export function createAdminClient() {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+  if (!supabaseUrl) {
+    throw new Error("NEXT_PUBLIC_SUPABASE_URL is missing");
+  }
+
   if (!serviceKey) {
     throw new Error(
       "SUPABASE_SERVICE_ROLE_KEY is not defined in environment variables/is missing",
