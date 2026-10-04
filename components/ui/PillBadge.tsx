@@ -3,12 +3,14 @@ import { ReactNode } from "react";
 interface PillBadgeProps {
   children: ReactNode;
   variant?: "coral" | "butter" | "lilac" | "ice";
+  size?: "md" | "sm"; // "md" = big hero pill (default), "sm" = inline pill for notes
   className?: string;
 }
 
 export function PillBadge({
   children,
   variant = "coral",
+  size = "md",
   className = "",
 }: PillBadgeProps) {
   const variantStyles = {
@@ -18,9 +20,14 @@ export function PillBadge({
     ice: "bg-ice text-ink border-ink shadow-chunky-sm",
   };
 
+  const sizeStyles = {
+    md: "text-lg sm:text-[24px] px-4 py-1 mx-1.5 my-1",
+    sm: "text-xs sm:text-sm px-3 py-0.5 mx-1 my-0.5",
+  };
+
   return (
     <span
-      className={`inline-flex items-center text-lg sm:text-[24px] font-bold px-4 py-1 mx-1.5 my-1 rounded-full border-2 transition-transform hover:-translate-y-1 hover:rotate-1 cursor-default select-none align-middle ${variantStyles[variant]} ${className}`}
+      className={`inline-flex items-center font-bold rounded-full border-2 transition-transform hover:-translate-y-1 hover:rotate-1 cursor-default select-none align-middle ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
     >
       {children}
     </span>

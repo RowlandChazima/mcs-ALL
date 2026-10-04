@@ -43,6 +43,8 @@ async function runSeed() {
           category: "pure_math",
           description:
             "Limits, continuity, techniques of differentiation, and extreme value analysis.",
+          exam_tip:
+            "Lecturers heavily test Differentiation from First Principles and composite limits in CAT 1. Work through Tutorial Sheet 1 before the CAT.",
           order_index: 1,
         },
         {
@@ -73,6 +75,9 @@ async function runSeed() {
         unit_id: calcUnit.id,
         slug: "formal-definition-of-limits",
         title: "Limits: The Epsilon-Delta Formulation",
+        summary:
+          "The rigorous definition of a limit, plus the sum and quotient rules.",
+        reading_minutes: 8,
         order_index: 1,
         youtube_id: "kfF40MiS7zA",
         youtube_title: "Understanding Epsilon-Delta Formulations",
@@ -96,13 +101,16 @@ When analyzing standard algebraic expressions, the following limit identities ho
 1. **Sum Rule**: $\\lim [f(x) + g(x)] = \\lim f(x) + \\lim g(x)$
 2. **Quotient Rule**: $\\lim \\left[\\frac{f(x)}{g(x)}\\right] = \\frac{\\lim f(x)}{\\lim g(x)}$, where $\\lim g(x) \\neq 0$.
 
-<FunctionPlot fn="x^2 - 4" title="Parabolic Curve f(x) = x^2 - 4"/>
+<FunctionPlot fn="x^2 - 4" xDomain="[-4, 4]" yDomain="[-5, 8]" points="[[-2, 0], [2, 0], [0, -4]]" title="Parabolic curve" />
 `,
       },
       {
         unit_id: calcUnit.id,
         slug: "differentiation-from-first-principles",
         title: "Differentiation from First Principles",
+        summary:
+          "Deriving the derivative from the limit definition, with a worked example.",
+        reading_minutes: 10,
         order_index: 2,
         youtube_id: "rAof9Ld5sOg",
         youtube_title: "Derivatives by First Principles",
@@ -140,7 +148,7 @@ double derivative(double (*f)(double), double x, double h) {
       title: "Calculus I CAT 1 Solutions (2024)",
       category: "past_paper",
       file_url:
-        "[https://your-bucket-url.supabase.co/storage/v1/object/public/course-materials/calc1-cat1-2024.pdf](https://your-bucket-url.supabase.co/storage/v1/object/public/course-materials/calc1-cat1-2024.pdf)",
+        "https://your-bucket-url.supabase.co/storage/v1/object/public/course-materials/calc1-cat1-2024.pdf",
       file_size: "1.4 MB",
     },
     {
@@ -148,10 +156,10 @@ double derivative(double (*f)(double), double x, double h) {
       title: "Tutorial Sheet 1: Limits & Continuity",
       category: "tutorial_sheet",
       file_url:
-        "[https://your-bucket-url.supabase.co/storage/v1/object/public/course-materials/calc1-sheet1.pdf](https://your-bucket-url.supabase.co/storage/v1/object/public/course-materials/calc1-sheet1.pdf)",
+        "https://your-bucket-url.supabase.co/storage/v1/object/public/course-materials/calc1-sheet1.pdf",
       file_size: "620 KB",
     },
-  ]);
+  ], { onConflict: "unit_id,title" });
 
   console.log("Database seeded successfully!");
 }

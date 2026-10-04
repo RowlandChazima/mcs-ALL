@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getSubtopicWorkspace } from "@/lib/db/queries";
 import CurriculumSidebar from "@/components/curriculum/CurriculumSidebar";
-// import { NotesRenderer } from "@/components/curriculum/NotesRenderer";
+import { NotesRenderer } from "@/components/curriculum/NotesRenderer";
 import { VideoCard } from "@/components/curriculum/VideoCard";
 import SubtopicPagination from "@/components/curriculum/SubtopicPagination";
 import Link from "next/link";
@@ -69,15 +69,15 @@ export default async function SubtopicPage({ params }: SubtopicPageProps) {
 
           {currentTopic.youtube_id && (
             <VideoCard
-              author={currentTopic.youtube_author}
-              duration={currentTopic.youtube_duration}
-              title={currentTopic.youtube_title}
+              author={currentTopic.youtube_author ?? "Unknown channel"}
+              duration={currentTopic.youtube_duration ?? ""}
+              title={currentTopic.youtube_title ?? currentTopic.title}
               youtubeId={currentTopic.youtube_id}
             />
           )}
 
           <div className="rounded-3xl border-2 border-ink bg-canvas p-6 sm:p-10 shadow-chunky-sm">
-            {/* <NotesRenderer content={currentTopic.content_markdown} /> */}
+            <NotesRenderer content={currentTopic.content_markdown} />
           </div>
 
           <SubtopicPagination

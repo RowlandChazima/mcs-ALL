@@ -21,7 +21,7 @@ const YearCard = ({
   unitCount,
   imageSrc,
   isAvailable,
-  colorTheme,
+  colorTheme = "butter",
 }: YearCardProps) => {
   const themeStyles = {
     butter: {
