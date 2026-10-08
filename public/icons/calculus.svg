@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <!-- Gradients for subtle cel-shading & depth -->
+    <linearGradient id="bgDiscGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdfbf7"/>
+      <stop offset="55%" stop-color="#ece2d0"/>
+      <stop offset="100%" stop-color="#d8cbb8"/>
+    </linearGradient>
+
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#56728f"/>
+      <stop offset="40%" stop-color="#41566c"/>
+      <stop offset="100%" stop-color="#2c3b4b"/>
+    </linearGradient>
+
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c97a63"/>
+      <stop offset="100%" stop-color="#a65540"/>
+    </linearGradient>
+
+    <linearGradient id="riemannGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8ba1b8"/>
+      <stop offset="100%" stop-color="#607890"/>
+    </linearGradient>
+
+    <linearGradient id="riemannGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#68829c"/>
+      <stop offset="100%" stop-color="#41586e"/>
+    </linearGradient>
+
+    <!-- Drop shadow for geometric pop -->
+    <filter id="subtleShadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="3" dy="6" stdDeviation="6" flood-color="#1a1a1a" flood-opacity="0.12"/>
+    </filter>
+
+    <!-- Clip path to keep internal coordinate details clean within disc -->
+    <clipPath id="discClip">
+      <circle cx="400" cy="300" r="230"/>
+    </clipPath>
+  </defs>
+
+  <style>
+    .ink-line { stroke: #1a1a1a; stroke-linecap: round; stroke-linejoin: round; }
+    .ink-thin { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .ink-grid { stroke: #d4c8b8; stroke-width: 1; stroke-dasharray: 4 6; }
+    .ink-curve { stroke: #1a1a1a; stroke-width: 3.5; fill: none; stroke-linecap: round; }
+    .cel-dark { fill: #1a1a1a; }
+    .cel-cream { fill: #fdfbf7; }
+  </style>
+
+  <!-- Circular Editorial Backdrop -->
+  <g id="backdrop">
+    <circle cx="400" cy="300" r="230" fill="url(#bgDiscGrad)" filter="url(#subtleShadow)"/>
+    <circle cx="400" cy="300" r="230" fill="none" stroke="#1a1a1a" stroke-width="2.5"/>
+    <circle cx="400" cy="300" r="218" fill="none" stroke="#e8ddd0" stroke-width="1.5" opacity="0.6"/>
+  </g>
+
+  <!-- Contained Calculus Coordinate Space -->
+  <g clip-path="url(#discClip)">
+    <!-- Mathematical Grid Lines -->
+    <path class="ink-grid" d="M 230 140 L 230 460 M 290 140 L 290 460 M 350 140 L 350 460 M 410 140 L 410 460 M 470 140 L 470 460 M 530 140 L 530 460" />
+    <path class="ink-grid" d="M 170 200 L 630 200 M 170 260 L 630 260 M 170 320 L 630 320 M 170 380 L 630 380 M 170 440 L 630 440" />
+
+    <!-- Area Under Curve (Integral Area Base) -->
+    <path d="M 270 430 L 270 376 Q 345 365 390 320 T 510 210 L 510 430 Z" fill="#cfdede" opacity="0.45"/>
+
+    <!-- Riemann Sum Rectangles (Integration Element) -->
+    <!-- Bar 1 -->
+    <g id="bar1">
+      <rect x="270" y="375" width="40" height="55" fill="url(#riemannGrad1)"/>
+      <path d="M 270 375 L 310 375 L 310 430 L 270 430 Z" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <path d="M 270 375 L 310 375 L 310 382 L 270 382 Z" fill="#a4b7ca" opacity="0.8"/>
+      <line x1="274" y1="375" x2="274" y2="430" stroke="#fdfbf7" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    <!-- Bar 2 -->
+    <g id="bar2">
+      <rect x="310" y="358" width="40" height="72" fill="url(#riemannGrad2)"/>
+      <path d="M 310 358 L 350 358 L 350 430 L 310 430 Z" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <path d="M 310 358 L 350 358 L 350 365 L 310 365 Z" fill="#8ca4be" opacity="0.8"/>
+      <line x1="314" y1="358" x2="314" y2="430" stroke="#fdfbf7" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    <!-- Bar 3 -->
+    <g id="bar3">
+      <rect x="350" y="332" width="40" height="98" fill="url(#riemannGrad1)"/>
+      <path d="M 350 332 L 390 332 L 390 430 L 350 430 Z" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <path d="M 350 332 L 390 332 L 390 339 L 350 339 Z" fill="#a4b7ca" opacity="0.8"/>
+      <line x1="354" y1="332" x2="354" y2="430" stroke="#fdfbf7" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    <!-- Bar 4 -->
+    <g id="bar4">
+      <rect x="390" y="295" width="40" height="135" fill="url(#riemannGrad2)"/>
+      <path d="M 390 295 L 430 295 L 430 430 L 390 430 Z" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <path d="M 390 295 L 430 295 L 430 302 L 390 302 Z" fill="#8ca4be" opacity="0.8"/>
+      <line x1="394" y1="295" x2="394" y2="430" stroke="#fdfbf7" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    <!-- Bar 5 -->
+    <g id="bar5">
+      <rect x="430" y="252" width="40" height="178" fill="url(#riemannGrad1)"/>
+      <path d="M 430 252 L 470 252 L 470 430 L 430 430 Z" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <path d="M 430 252 L 470 252 L 470 259 L 430 259 Z" fill="#a4b7ca" opacity="0.8"/>
+      <line x1="434" y1="252" x2="434" y2="430" stroke="#fdfbf7" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    <!-- Bar 6 -->
+    <g id="bar6">
+      <rect x="470" y="210" width="40" height="220" fill="url(#riemannGrad2)"/>
+      <path d="M 470 210 L 510 210 L 510 430 L 470 430 Z" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <path d="M 470 210 L 510 210 L 510 217 L 470 217 Z" fill="#8ca4be" opacity="0.8"/>
+      <line x1="474" y1="210" x2="474" y2="430" stroke="#fdfbf7" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    <!-- Continuous Function Curve f(x) -->
+    <path class="ink-curve" d="M 210 395 C 275 390, 325 370, 375 330 C 425 290, 465 240, 545 175" />
+
+    <!-- Coordinate Axes -->
+    <path d="M 210 430 L 570 430" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 240 455 L 240 160" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+    
+    <!-- Axis Arrows -->
+    <polygon points="575,430 565,425 565,435" fill="#1a1a1a"/>
+    <polygon points="240,155 235,165 245,165" fill="#1a1a1a"/>
+
+    <!-- Axis Labels -->
+    <text x="568" y="450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="bold" font-size="14" fill="#1a1a1a">x</text>
+    <text x="222" y="166" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="bold" font-size="14" fill="#1a1a1a">y</text>
+
+    <!-- Tangent Differential Triangle (dx, dy slope) -->
+    <g id="tangentTriangle">
+      <path d="M 405 305 L 475 305 L 475 235 Z" fill="#e8ddd0" opacity="0.75"/>
+      <path d="M 405 305 L 475 305 L 475 235 Z" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <!-- dx and dy notation -->
+      <text x="435" y="320" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-style="italic" font-size="11" font-weight="bold" fill="#1a1a1a">dx</text>
+      <text x="483" y="275" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-style="italic" font-size="11" font-weight="bold" fill="#1a1a1a">dy</text>
+    </g>
+
+    <!-- Tangent Secant Line (Derivative dy/dx) -->
+    <line x1="300" y1="410" x2="520" y2="190" stroke="#a65540" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="330" y1="380" x2="530" y2="180" stroke="#c97a63" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+
+    <!-- Tangent Point (Point of Tangency) -->
+    <circle cx="410" cy="300" r="7" fill="#fdfbf7" stroke="#1a1a1a" stroke-width="2.5"/>
+    <circle cx="410" cy="300" r="3.5" fill="url(#accentGrad)"/>
+  </g>
+
+  <!-- Iconic Foreground Symbol: Stylized Integral Sign (∫) with Cel Shading -->
+  <g id="integralSymbol" filter="url(#subtleShadow)">
+    <!-- Cel Cast Shadow Layer -->
+    <path d="M 334 146 C 304 146, 284 166, 284 200 C 284 220, 292 234, 306 234 C 318 234, 326 224, 326 212 C 326 198, 314 192, 304 192 C 302 192, 300 193, 298 194 C 300 178, 314 164, 334 164 C 354 164, 360 182, 360 216 L 360 384 C 360 436, 342 466, 312 466 C 286 466, 270 448, 270 422 C 270 402, 280 388, 294 388 C 306 388, 314 398, 314 410 C 314 424, 302 430, 292 430 C 290 430, 288 429, 286 428 C 288 444, 300 454, 314 454 C 334 454, 344 430, 344 384 L 344 216 C 344 170, 360 146, 334 146 Z"
+          fill="#1a1a1a" opacity="0.18" transform="translate(6, 6)"/>
+
+    <!-- Main Solid Integral Shape -->
+    <path d="M 330 140 C 298 140, 278 162, 278 196 C 278 217, 288 230, 302 230 C 314 230, 322 220, 322 208 C 322 194, 310 188, 300 188 C 298 188, 295 189, 293 190 C 295 174, 310 156, 330 156 C 352 156, 358 174, 358 208 L 358 392 C 358 440, 338 460, 306 460 C 280 460, 262 442, 262 416 C 262 396, 272 382, 286 382 C 298 382, 306 392, 306 404 C 306 418, 294 424, 284 424 C 282 424, 279 423, 277 422 C 279 438, 292 448, 308 448 C 330 448, 340 424, 340 392 L 340 208 C 340 160, 358 140, 330 140 Z"
+          fill="url(#primaryGrad)" stroke="#1a1a1a" stroke-width="2.5"/>
+
+    <!-- Cel Shading: Crisp Edge Highlight on Integral (Dual Tone Finish) -->
+    <path d="M 330 143 C 304 143, 282 163, 281 195 C 284 190, 292 188, 300 188 C 298 183, 302 176, 312 167 C 320 160, 327 158, 332 158 C 348 158, 355 172, 356 200 L 356 385 C 356 408, 352 429, 344 443 C 343 430, 342 411, 342 392 L 342 210 C 342 164, 356 143, 330 143 Z"
+          fill="#7891a9" opacity="0.45"/>
+  </g>
+
+  <!-- Editorial Mathematical Floating Accents -->
+  <g id="editorialBadges">
+    <!-- Differential 'dt / dx' Badge -->
+    <g transform="translate(480, 140)">
+      <rect x="0" y="0" width="84" height="34" rx="6" fill="#fdfbf7" stroke="#1a1a1a" stroke-width="2" filter="url(#subtleShadow)"/>
+      <path d="M 0 0 L 84 0 L 84 8 L 0 8 Z" fill="#3d5166" rx="6"/>
+      <text x="42" y="24" font-family="'Courier New', Courier, monospace" font-size="14" font-weight="bold" fill="#1a1a1a" text-anchor="middle">lim Δx→0</text>
+    </g>
+
+    <!-- Infinity Symbol / Continuous Infinity -->
+    <g transform="translate(195, 270)">
+      <circle cx="20" cy="20" r="24" fill="#fdfbf7" stroke="#1a1a1a" stroke-width="2"/>
+      <path d="M 12 20 C 12 16, 16 16, 18 19 L 22 21 C 24 24, 28 24, 28 20 C 28 16, 24 16, 22 19 L 18 21 C 16 24, 12 24, 12 20 Z" 
+            fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Summation Vector Accent -->
+    <g transform="translate(470, 420)">
+      <circle cx="28" cy="28" r="26" fill="#fdfbf7" stroke="#1a1a1a" stroke-width="2" filter="url(#subtleShadow)"/>
+      <text x="28" y="37" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-style="italic" font-weight="bold" fill="#3d5166" text-anchor="middle">∑</text>
+    </g>
+
+    <!-- Decorative Minimalist Angle Markers -->
+    <path d="M 175 125 L 190 125 L 190 140" fill="none" stroke="#3d5166" stroke-width="2"/>
+    <path d="M 625 475 L 610 475 L 610 460" fill="none" stroke="#3d5166" stroke-width="2"/>
+    <circle cx="175" cy="460" r="3" fill="#c97a63"/>
+    <circle cx="615" cy="135" r="3" fill="#3d5166"/>
+  </g>
+</svg>
