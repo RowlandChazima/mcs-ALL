@@ -1,7 +1,7 @@
 ---
 title: "Limit of a Function"
 summary: "What a limit is, the limit of a constant, one-sided limits, and when a two-sided limit exists."
-video: https://youtu.be/watch?v=5R0TcAn7z2Y?si=BUdopaVxtiQ--6jQ
+video: https://www.youtube.com/watch?v=5R0TcAn7z2Y
 ---
 
 ### Definition
