@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Maths & CS Cohort Hub",
+  title: "Maths & CS Hub",
   description:
     "Curated lecture notes, video guides, tutorial sheets, and past papers for Mathematics and Computer Science.",
 };
