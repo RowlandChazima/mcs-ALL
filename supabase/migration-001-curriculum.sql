@@ -18,7 +18,18 @@ create table if not exists academic_years (
   description text
 );
 
--- ---------- 2. Units: add the columns the code expects ----------
+-- ---------- 2. Units: create table if not exists, then ensure columns match ----------
+create table if not exists units (
+  id            uuid primary key default gen_random_uuid(),
+  title         text not null,
+  slug          text not null unique,
+  description   text,
+  accent_color  text,
+  icon_path     text,
+  order_index   int default 0,
+  created_at    timestamptz default now()
+);
+
 -- Added as nullable so existing rows (if any) don't block the migration.
 alter table units add column if not exists year_id       uuid references academic_years(id) on delete cascade;
 alter table units add column if not exists code          text;

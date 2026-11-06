@@ -1,16 +1,18 @@
-// Usage: pnpm db:check
+// Usage:
+//   pnpm db:check              check staging database (default, .env.local)
+//   pnpm db:check --env prod   check production database (.env.production.local)
 // Reports whether env vars are set, whether tables exist, and what the PUBLIC
 // (anon) key can actually see versus the admin (service-role) key.
 // Never prints secret values.
 import { createClient } from "@supabase/supabase-js";
-import * as dotenv from "dotenv";
-dotenv.config({ path: ".env.local" });
+import { loadTargetEnv } from "./env";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.NEXT_PUBLIC_ANON_KEY;
-const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const env = loadTargetEnv();
+const { supabaseUrl: url, anonKey, serviceKey, host, target, envFile } = env;
 
-console.log("\n1) Environment variables (.env.local)");
+console.log(`\n🎯 Target database: [${target.toUpperCase()}] at ${host} (via ${envFile})`);
+
+console.log("\n1) Environment variables");
 for (const [name, value] of Object.entries({
   NEXT_PUBLIC_SUPABASE_URL: url,
   NEXT_PUBLIC_ANON_KEY: anonKey,
@@ -19,7 +21,7 @@ for (const [name, value] of Object.entries({
   console.log(`   ${value ? "OK     " : "MISSING"} ${name}`);
 }
 if (!url || !anonKey) {
-  console.log("\n=> Fix the missing variables above first, then re-run.\n");
+  console.log(`\n=> Fix the missing variables in ${envFile} first, then re-run.\n`);
   process.exit(1);
 }
 
@@ -71,15 +73,15 @@ async function main() {
   console.log("\nDiagnosis");
   if (missing.length) {
     console.log(`   - Table problem on: ${missing.join(", ")}`);
-    console.log("     => Run supabase/migration-001-curriculum.sql in the SQL editor.");
+    console.log("     => Run supabase/migration-001-curriculum.sql and migration-002-unit-page-fields.sql in the SQL editor.");
   }
   if (rlsBlocked.length) {
     console.log(`   - Data exists but the public key can't read: ${rlsBlocked.join(", ")}`);
-    console.log("     => RLS is on without a read policy. Re-run section 5 of the migration.");
+    console.log("     => RLS is on without a read policy. Re-run section 5 of migration-001.");
   }
   if (!missing.length && !rlsBlocked.length && empty.includes("academic_years")) {
     console.log("   - Tables exist but are empty.");
-    console.log("     => Run: pnpm db:seed   (and read its output for errors)");
+    console.log(`     => Run: pnpm db:seed ${target === "production" ? "--env prod" : ""}  (and read its output for errors)`);
   }
   if (!missing.length && !rlsBlocked.length && !empty.includes("academic_years") && !year) {
     console.log('   - Rows exist but none has slug "year-1". Check the slug column.');

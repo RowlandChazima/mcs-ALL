@@ -1,13 +1,16 @@
+// Usage:
+//   pnpm db:seed              seed staging database (default, .env.local)
+//   pnpm db:seed --env prod   seed production database (.env.production.local)
 import { createClient } from "@supabase/supabase-js";
-import * as dotenv from "dotenv";
-dotenv.config({ path: ".env.local" });
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-);
+import { loadTargetEnv, confirmProductionWrite } from "./env";
 
 async function runSeed() {
+  const env = loadTargetEnv({ requireServiceKey: true });
+  console.log(`\n🎯 Target database: [${env.target.toUpperCase()}] at ${env.host} (via ${env.envFile})`);
+
+  await confirmProductionWrite(`seed initial curriculum rows into database (${env.host})`);
+
+  const supabase = createClient(env.supabaseUrl, env.serviceKey!);
   console.log("Seeding database tables...");
 
   // 1. Insert Year 1
@@ -65,11 +68,7 @@ async function runSeed() {
 
   if (unitErr) throw unitErr;
 
-  // Notes (subtopics) and downloads are NOT seeded here. They live in notes/
-  // and are pushed with `pnpm notes:push`, so re-seeding can never overwrite
-  // your work or add placeholder files.
-
-  console.log("Database seeded successfully!");
+  console.log(`[ok] Database seeded successfully on [${env.target.toUpperCase()}]!`);
 }
 
 runSeed().catch((err) => {
