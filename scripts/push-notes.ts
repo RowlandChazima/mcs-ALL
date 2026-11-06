@@ -1,15 +1,16 @@
 // Usage:
-//   pnpm notes:check     validate every note (no internet or keys needed)
-//   pnpm notes:dry       compare with the database and show what would change
-//   pnpm notes:push      validate, upload images/files, save notes, refresh the site
-// Options:  --unit <slug>   only that unit folder
-//           --prune         also delete database notes/downloads that no longer have a file
-import * as dotenv from "dotenv";
+//   pnpm notes:check            validate every note (no internet or keys needed)
+//   pnpm notes:dry              compare with staging database and show what would change
+//   pnpm notes:push             validate, upload images/files, save notes to staging
+//   pnpm notes:dry --env prod   compare with production database
+//   pnpm notes:push --env prod  save notes to production (requires confirmation)
+// Options:  --unit <slug>       only that unit folder
+//           --prune             also delete database notes/downloads that no longer have a file
+//           --env <stage|prod>  select staging (default, .env.local) or production (.env.production.local)
 import path from "node:path";
 import { runPipeline, type Mode } from "./notes/pipeline";
 import { createSupabaseStore } from "./notes/store";
-
-dotenv.config({ path: ".env.local" });
+import { loadTargetEnv, confirmProductionWrite } from "./env";
 
 const args = process.argv.slice(2);
 const has = (flag: string) => args.includes(flag);
@@ -48,13 +49,14 @@ async function revalidate() {
 async function main() {
   let store;
   if (mode !== "check") {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !key) {
-      console.error("[x] Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.local first.");
-      process.exit(1);
+    const env = loadTargetEnv({ requireServiceKey: true });
+    console.log(`🎯 Target database: [${env.target.toUpperCase()}] at ${env.host} (via ${env.envFile})`);
+
+    if (mode === "push") {
+      await confirmProductionWrite(`push notes to database (${env.host})`);
     }
-    store = createSupabaseStore(url, key);
+
+    store = createSupabaseStore(env.supabaseUrl, env.serviceKey!);
   }
 
   const report = await runPipeline({
