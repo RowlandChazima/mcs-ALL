@@ -51,6 +51,10 @@ html {
   color: #ffffff;
 }
 
+.notes {
+  overflow-wrap: anywhere;
+}
+
 .notes :not(pre) > code {
   font-family: var(--font-mono);
   font-size: 0.875em;
@@ -89,4 +93,49 @@ html {
 .notes table {
   display: block;
   overflow-x: auto;
+}
+
+/* Mobile-only optimizations (< 640px) */
+@media (max-width: 639px) {
+  .notes pre {
+    padding: 0.75rem;
+    max-width: 100%;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 0px 0px #191a1d;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .notes pre code {
+    font-size: 0.8125rem;
+  }
+
+  .notes table {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    background:
+      linear-gradient(to right, white 30%, rgba(255, 255, 255, 0)),
+      linear-gradient(to right, rgba(255, 255, 255, 0), white 70%) 100% 0,
+      radial-gradient(farthest-side at 0 50%, rgba(25, 26, 29, 0.12), rgba(0, 0, 0, 0)),
+      radial-gradient(farthest-side at 100% 50%, rgba(25, 26, 29, 0.12), rgba(0, 0, 0, 0)) 100% 0;
+    background-repeat: no-repeat;
+    background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+
+  .notes th,
+  .notes td {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .notes .katex-display {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .notes blockquote {
+    padding-left: 0.75rem;
+    padding-right: 0.5rem;
+    margin-left: 0;
+    margin-right: 0;
+  }
 }

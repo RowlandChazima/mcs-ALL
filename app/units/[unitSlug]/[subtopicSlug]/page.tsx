@@ -30,21 +30,22 @@ export default async function SubtopicPage({ params }: SubtopicPageProps) {
       : null;
 
   return (
-    <div className="space-y-8 py-6">
-      <div className="flex items-center gap-3">
+    <div className="space-y-6 sm:space-y-8 py-4 sm:py-6">
+      {/* Breadcrumbs (wrap on mobile to prevent overflow) */}
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         <Link
-          className="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-surface px-4 py-2 text-xs font-bold text-ink shadow-chunky-sm"
+          className="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-surface px-3.5 sm:px-4 py-2 text-xs font-bold text-ink shadow-chunky-sm shrink-0"
           href={`/units/${unitSlug}`}
         >
           <FaArrowLeft className="size-3" />
           <span>Back to Syllabus</span>
         </Link>
-        <span className="text-xs font-bold uppercase tracking-wider text-ink-muted">
+        <span className="text-xs font-bold uppercase tracking-wider text-ink-muted break-words">
           / {unit.code} / {currentTopic.title}
         </span>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
         <CurriculumSidebar
           currentSlug={subtopicSlug}
           subtopics={syllabusTree.map((s) => ({
@@ -57,10 +58,11 @@ export default async function SubtopicPage({ params }: SubtopicPageProps) {
           unitTitle={unit.title}
         />
 
-        <article className="flex-1 w-full rounded-[2.5rem] border-2 border-ink bg-surface p-6 sm:p-10 shadow-chunky space-y-8">
-          <div className="space-y-3 pb-6 border-b-2 border-ink/10">
-            <span className="rounded-full border-2 border-ink bg-butter px-3 py-0.5 font-mono text-xs font-black text-ink">
-              Topic 0{currentTopic.order_index}
+        {/* Single box on mobile, nested box on tablet/desktop */}
+        <article className="flex-1 w-full rounded-3xl sm:rounded-[2.5rem] border-2 border-ink bg-surface p-4 sm:p-10 shadow-chunky space-y-6 sm:space-y-8">
+          <div className="space-y-2.5 sm:space-y-3 pb-5 sm:pb-6 border-b-2 border-ink/10">
+            <span className="rounded-full border-2 border-ink bg-butter px-3 py-0.5 font-mono text-xs font-black text-ink inline-block">
+              Topic {currentTopic.order_index < 10 ? `0${currentTopic.order_index}` : currentTopic.order_index}
             </span>
             <h1 className="text-2xl sm:text-4xl font-black text-ink tracking-tight">
               {currentTopic.title}
@@ -76,7 +78,8 @@ export default async function SubtopicPage({ params }: SubtopicPageProps) {
             />
           )}
 
-          <div className="rounded-3xl border-2 border-ink bg-canvas p-6 sm:p-10 shadow-chunky-sm">
+          {/* On mobile: unboxed, sits directly inside article. sm+: restores container box */}
+          <div className="sm:rounded-3xl sm:border-2 sm:border-ink sm:bg-canvas sm:p-10 sm:shadow-chunky-sm">
             <NotesRenderer content={currentTopic.content_markdown} />
           </div>
 
