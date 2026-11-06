@@ -84,7 +84,13 @@ export async function NotesRenderer({ content }: NotesRendererProps) {
   }
 
   return (
-    <div className="notes prose prose-neutral max-w-none text-ink prose-headings:font-black prose-headings:tracking-tight prose-headings:text-ink prose-p:leading-relaxed prose-strong:text-ink">
+    <div className="notes prose prose-neutral max-w-none text-ink [overflow-wrap:anywhere]
+      prose-headings:font-black prose-headings:tracking-tight prose-headings:text-ink prose-headings:leading-tight sm:prose-headings:leading-snug
+      prose-h1:text-[1.75rem] sm:prose-h1:text-4xl
+      prose-h2:text-[1.4rem] sm:prose-h2:text-2xl prose-h2:mt-8 sm:prose-h2:mt-10 prose-h2:mb-3 sm:prose-h2:mb-4
+      prose-h3:text-[1.15rem] sm:prose-h3:text-xl prose-h3:mt-5 sm:prose-h3:mt-6 prose-h3:mb-2
+      prose-p:text-base prose-p:leading-[1.7] prose-strong:text-ink
+      prose-ul:ps-5 sm:prose-ul:ps-8 prose-ol:ps-5 sm:prose-ol:ps-8 prose-li:my-1.5 sm:prose-li:my-2">
       {rendered}
     </div>
   );
